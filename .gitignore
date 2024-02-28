@@ -1,0 +1,49 @@
+#plots
+**/*pdf
+**/*png
+
+#tabular datasets
+**/occurrences*
+
+#pycharm
+**/.idea/
+
+#vscode
+**/.vscode/
+
+#byte code
+*.py[cod]
+**/__pycache__
+
+#dist
+*egg-info
+build/
+dist/
+
+#test
+**/test_data/
+**/examples/
+tests
+
+#notebooks
+**/.ipynb_checkpoints/
+notebooks/.virtual_documents
+
+#tests outputs
+**/out/
+
+#R
+**/.Rhistory
+
+**/.DS_Store
+**/._.DS_Store
+
+#images
+notebooks/*[png|pdf]
+
+# mutsplice outputs
+notebooks/2_mutsplice/
+notebooks/2_mutsplice_out.ipynb
+notebooks/2_cmds.txt
+notebooks/1_SpliceAI
+notebooks/1_AllExonPairs
