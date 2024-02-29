@@ -4,7 +4,7 @@ channels:
   - bioconda
 dependencies:
     - python=3.10.12
-    - cudatoolkit=11.8.0
+    - cudatoolkit=11.2.2
     - cudnn=8.1.0
     - meme=5.5.3
     - pip=23.2.1
