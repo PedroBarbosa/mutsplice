@@ -401,8 +401,8 @@ class Motifs(object):
         :return pd.DataFrame: Filtered df with additional information 
         """
         if raw_hits is None or raw_hits.empty:
-            logger.error('No motifs found given this experimental setup.')
-            return None
+            raise ValueError('No motifs found given this experimental setup.')
+            
         else:
             logger.info("Filtering motif results:")
 

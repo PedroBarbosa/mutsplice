@@ -812,13 +812,16 @@ class SpliceAI(object):
                 mut_type = m_pos[2]
                 label = m_pos[3]
                 effect_bin = m_pos[5]
-                _color = bin_map[effect_bin]
+                try:
+                    _color = bin_map[effect_bin]
 
-                features.append(
-                    GraphicFeature(start=m_pos[0],
-                                   end=m_pos[1],
-                                   color=_color,
-                                   label=label))
+                    features.append(
+                        GraphicFeature(start=m_pos[0],
+                                    end=m_pos[1],
+                                    color=_color,
+                                    label=label))
+                except KeyError:
+                    continue
 
             record = GraphicRecord(sequence_length=ref_seq_len,
                                    features=features)
