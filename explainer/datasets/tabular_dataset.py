@@ -219,7 +219,7 @@ class TabularDataset(object):
                 subset_rbps=self.rbps,
                 source=kwargs['motif_source'],
                 search=kwargs['motif_search'],
-                qvalue_threshold=kwargs['qvalue_threshold'],
+                pvalue_threshold=kwargs['pvalue_threshold'],
                 logodds_threshold=kwargs['log_odds_threshold'],
                 ss_idx=self.ss_idx,
                 ss_idx_extend=kwargs['ss_idx_extend'])

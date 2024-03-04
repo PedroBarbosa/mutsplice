@@ -38,7 +38,7 @@ def _generate_default_parameters(**kwargs):
     kwargs['subset_rbps'] = kwargs.get('subset_rbps', 'encode')
     kwargs['motif_source'] = kwargs.get('motif_source', 'rosina2017')
     kwargs['motif_search'] = kwargs.get('motif_search', 'plain')
-    kwargs['qvalue_threshold'] = kwargs.get('qvalue_threshold', 1)
+    kwargs['pvalue_threshold'] = kwargs.get('pvalue_threshold', 1)
     kwargs['log_odds_threshold'] = kwargs.get('log_odds_threshold', 0.15)
     kwargs['min_motif_length'] = kwargs.get('min_motif_length', 5)
 
@@ -193,7 +193,7 @@ class Preprocessing(object):
                    subset_rbps=kwargs['subset_rbps'],
                    source=kwargs['motif_source'],
                    search=kwargs['motif_search'],
-                   qvalue_threshold=kwargs['qvalue_threshold'],
+                   pvalue_threshold=kwargs['pvalue_threshold'],
                    logodds_threshold=kwargs['log_odds_threshold'],
                    min_motif_length=kwargs['min_motif_length'],
                    ss_idx=self.SS_IDX_PATH,
@@ -414,11 +414,10 @@ def main():
                              'were described as involved in splicing, and I performed '
                              'differential splicing analysis')
 
-    parser.add_argument('-q', '--qvalue_threshold', default=1, type=float,
-                        help='Maximum qvalue threshold from FIMO output to consider '
+    parser.add_argument('-p', '--pvalue_threshold', default=0.00005, type=float,
+                        help='Maximum pvalue threshold from FIMO output to consider '
                              'a motif ocurrence as valid. Only relevant when "motif_search" '
-                             '== "fimo". Default: "1", no threshold is applied, all hits '
-                             'are saved.')
+                             '== "fimo". Default: "0.00005".')
 
     parser.add_argument('-l', '--log_odds_threshold', default=0.15, type=float,
                         help='Minimum log-odds value for a nucleotide in a given '
@@ -490,7 +489,7 @@ def main():
                   'motif_source': args.motif_source,
                   'motif_search': args.motif_search,
                   'subset_rbps': process_subset_args(args.subset_rbps),
-                  'qvalue_threshold': args.qvalue_threshold,
+                  'pvalue_threshold': args.pvalue_threshold,
                   'log_odds_threshold': args.log_odds_threshold,
                   'min_motif_length': args.min_motif_length,
                   'use_full_sequence': args.use_full_sequence,

@@ -55,7 +55,7 @@ def _call_parallel_motif_scanning(seqs: str,
            subset_rbps=kwargs['subset_rbps'],
            source=kwargs['motif_source'],
            search=kwargs['motif_search'],      
-           qvalue_threshold=kwargs['qvalue_threshold'],
+           pvalue_threshold=kwargs['pvalue_threshold'],
            logodds_threshold=kwargs['log_odds_threshold'],
            min_motif_length=kwargs['min_motif_length'],
            ss_idx=ss_idx_path,
@@ -108,7 +108,7 @@ class Motifs(object):
                  source: str = Literal['rosina2017', 'oRNAment', 'ATtRACT'],
                  search: str = Literal['plain', 'fimo'],
                  subset_rbps: Union[str, list] = "encode",
-                 qvalue_threshold: float = 1,
+                 pvalue_threshold: float = 0.00001,
                  logodds_threshold: float = 0.15,
                  min_motif_length: int = 5,
                  ss_idx: Union[str, dict] = None,
@@ -126,7 +126,7 @@ class Motifs(object):
         ENCODE that were described as involved in splicing and
         we performed differential splicing analysis
 
-        :param float qvalue_threshold: Maximum qvalue allowed
+        :param float pvalue_threshold: Maximum pvalue allowed
         to consider a hit as valid when motif scanning is
         performed with FIMO.
 
@@ -170,7 +170,7 @@ class Motifs(object):
         self.fasta = seqs
         self.source = source
         self.search = search
-        self.qvalue_threshold = qvalue_threshold
+        self.pvalue_threshold = pvalue_threshold
         self.logodds_threshold = logodds_threshold
         self.min_motif_len = min_motif_length
         self.ref_ss_idx_extend = ss_idx_extend
@@ -317,7 +317,7 @@ class Motifs(object):
         logger.info("Scanning with FIMO")
         fimo_outdir = os.path.join(self.outdir, 'fimo_out')
         os.makedirs(fimo_outdir, exist_ok=True)
-        base_cmd = ['fimo', '--norc', '--oc', fimo_outdir, '--thresh', '0.0001']
+        base_cmd = ['fimo', '--norc', '--oc', fimo_outdir, '--thresh', str(self.pvalue_threshold), '--no-qvalue', '--bfile', '--motif--']
 
         # If subset by at least one RBP, update the arg list
         # of FIMO to just use the PWM belonging to those RBPs.
@@ -352,8 +352,7 @@ class Motifs(object):
             }
 
             ordered_cols = [
-                'seq_id', 'rbp_name', 'rbp_motif', 'start', 'end', 'p-value',
-                'q-value'
+                'seq_id', 'rbp_name', 'rbp_motif', 'start', 'end', 'p-value'
             ]
             df_fimo_out.rename(columns=rename_cols, inplace=True)
             full_df = df_fimo_out[ordered_cols].drop_duplicates(
@@ -377,16 +376,16 @@ class Motifs(object):
                          "threshold set ({}): {}".format(
                              self.logodds_threshold, _n - full_df.shape[0]))
 
-            # Remove matches not passing the q-value threshold
+            # Remove matches not passing the p-value threshold
             _n = full_df.shape[0]
 
-            full_df = full_df[full_df['q-value'] <= self.qvalue_threshold]
-            logger.debug("Number of hits removed due to the q-value "
+            full_df = full_df[full_df['p-value'] <= self.pvalue_threshold]
+            logger.debug("Number of hits removed due to the p-value "
                          "threshold set ({}): {}".format(
-                             self.qvalue_threshold, _n - full_df.shape[0]))
+                             self.pvalue_threshold, _n - full_df.shape[0]))
 
             full_df.start -= 1
-            return full_df.drop(columns=['p-value', 'q-value'])
+            return full_df.drop(columns=['p-value'])
 
         except pd.errors.EmptyDataError:
             logger.log("MAIN", "No single match found by FIMO.")
@@ -402,7 +401,6 @@ class Motifs(object):
         """
         if raw_hits is None or raw_hits.empty:
             raise ValueError('No motifs found given this experimental setup.')
-            
         else:
             logger.info("Filtering motif results:")
 
