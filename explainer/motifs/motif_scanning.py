@@ -108,7 +108,7 @@ class Motifs(object):
                  source: str = Literal['rosina2017', 'oRNAment', 'ATtRACT'],
                  search: str = Literal['plain', 'fimo'],
                  subset_rbps: Union[str, list] = "encode",
-                 pvalue_threshold: float = 0.00001,
+                 pvalue_threshold: float = 0.00005,
                  logodds_threshold: float = 0.15,
                  min_motif_length: int = 5,
                  ss_idx: Union[str, dict] = None,

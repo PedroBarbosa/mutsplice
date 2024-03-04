@@ -38,7 +38,7 @@ def _generate_default_parameters(**kwargs):
     kwargs['subset_rbps'] = kwargs.get('subset_rbps', 'encode')
     kwargs['motif_source'] = kwargs.get('motif_source', 'rosina2017')
     kwargs['motif_search'] = kwargs.get('motif_search', 'plain')
-    kwargs['pvalue_threshold'] = kwargs.get('pvalue_threshold', 1)
+    kwargs['pvalue_threshold'] = kwargs.get('pvalue_threshold', 0.00005)
     kwargs['log_odds_threshold'] = kwargs.get('log_odds_threshold', 0.15)
     kwargs['min_motif_length'] = kwargs.get('min_motif_length', 5)
 
