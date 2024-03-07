@@ -110,13 +110,18 @@ class Preprocessing(object):
 
         if do_mutations:
             self.datasets = self.mutagenesis(**kwargs)
-
+            print(self.datasets)
         else:
             self.motif_hits = None
-            self.datasets = self.SEQS_PATH
+            seqs_dir = os.path.join(os.path.join(self.out_dir, "3_mutated_seqs"))
+            self.datasets = glob.glob('{}/*fa'.format(seqs_dir))
 
         if run_spliceai:
             logger.log('MAIN', 'SpliceAI')
+            if self.datasets is None:
+                logger.error('No mutated sequences found.')
+                return 
+            
             assert len(
                 self.datasets) > 0, "No mutated sequences found. Please generate the putative datasets."
 
@@ -238,21 +243,25 @@ class Preprocessing(object):
             restrict = True
             f = "MOTIF_MATCHES.tsv.gz"
 
-        self.motif_hits = MotifsHits(file=os.path.join(hits_path, f),
+        try:
+            self.motif_hits = MotifsHits(file=os.path.join(hits_path, f),
                                      file_format='plain')
+            m = MutateAtMotifLocation(fasta=self.SEQS_PATH,
+                            motifs=self.motif_hits,
+                            outdir=mutated_path,
+                            outbasename=kwargs['outbasename'],
+                            abrogate=True,
+                            ss_idx=self.SS_IDX_PATH if restrict else None,
+                            ss_idx_extend=kwargs['ss_idx_extend'],
+                            ss_idx_skip_ssRegion=kwargs['skip_ss_region'])
 
-        m = MutateAtMotifLocation(fasta=self.SEQS_PATH,
-                                  motifs=self.motif_hits,
-                                  outdir=mutated_path,
-                                  outbasename=kwargs['outbasename'],
-                                  abrogate=True,
-                                  ss_idx=self.SS_IDX_PATH if restrict else None,
-                                  ss_idx_extend=kwargs['ss_idx_extend'],
-                                  ss_idx_skip_ssRegion=kwargs['skip_ss_region'])
+            m.mutateMotifs()
+            logger.success("Done")
+            return glob.glob('{}/*fa'.format(mutated_path))
 
-        m.mutateMotifs()
-        logger.success("Done")
-        return glob.glob('{}/*fa'.format(mutated_path))
+        except FileNotFoundError:
+            logger.error(f"Motif hits file in {hits_path} not found. Skipping analysis.")
+
 
     def run_spliceAI(self, seqs: str,
                      outname_: str,
