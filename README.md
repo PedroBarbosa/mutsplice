@@ -72,7 +72,7 @@ Check the `--help` of `python mutsplice/datasets/mutsplice_pipeline.py` for more
 
 ### Output
 
-The output are dataframes with lots of information, including the perturbation effect, location of the motif, distances to splice sites, effects on cryptic splice sites, etc.Plots like the one below are also generated, which provides a summary representation of relevant perturbation across the exon of interest:
+The output are dataframes with lots of information, including the perturbation effect, location of the motif, distances to splice sites, effects on cryptic splice sites, etc. Plots like the one below are also generated, which provide a summary representation of relevant perturbations across the exon of interest:
 
 <img src="mutsplice/readme_images/mutsplice_out.png" height="300"/>
 
