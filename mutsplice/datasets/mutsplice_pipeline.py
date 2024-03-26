@@ -17,11 +17,11 @@ from tqdm import tqdm
 from vcfhandle.utils import validate_vcf
 from gtfhandle.utils import file_to_bed_df, bed_is_ok, split_fasta_file
 from gtfhandle.extract_surrounding_features import getFeaturesFromCache, write_output
-from explainer.motifs.motif_scanning import Motifs, _call_parallel_motif_scanning, _concat_parallel_output, process_subset_args
-from explainer.mutations.mutate_seqs import MotifsHits, MutateAtMotifLocation, MutateOverSequences
-from explainer.datasets.manage_spliceai import SpliceAI
-from explainer.datasets.utils import setup_logger
-from explainer.datasets.tabular_dataset import TabularDataset
+from mutsplice.motifs.motif_scanning import Motifs, _call_parallel_motif_scanning, _concat_parallel_output, process_subset_args
+from mutsplice.perturbations.mutate_seqs import MotifsHits, MutateAtMotifLocation, MutateOverSequences
+from mutsplice.datasets.manage_spliceai import SpliceAI
+from mutsplice.datasets.utils import setup_logger
+from mutsplice.datasets.tabular_dataset import TabularDataset
 from loguru import logger
 
 def _generate_default_parameters(**kwargs):
@@ -53,7 +53,7 @@ def _generate_default_parameters(**kwargs):
     return kwargs
 
   
-class Preprocessing(object):
+class MutSplicePipeline(object):
     """
     Creates the structure to do all the preprocessing routines
     """
@@ -65,8 +65,8 @@ class Preprocessing(object):
                  run_spliceai: bool = False,
                  **kwargs):
         """
-        Data preprocessing routines to generate
-        datasets to explain spliceAI predictons
+        Data processing routines to perturb sequences and
+        generate datasets to study SpliceAI predictons
 
         :param Union[pr.PyRanges, pd.DataFrame] data: Input data to run the
         preprocessing pipeline. Depending on the flags provided, this input
@@ -110,7 +110,6 @@ class Preprocessing(object):
 
         if do_mutations:
             self.datasets = self.mutagenesis(**kwargs)
-            print(self.datasets)
         else:
             self.motif_hits = None
             seqs_dir = os.path.join(os.path.join(self.out_dir, "3_mutated_seqs"))
@@ -343,10 +342,9 @@ class Preprocessing(object):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate a local dataset for explaining spliceAI "
-                                                 "predictions, one per each row of the input.")
+    parser = argparse.ArgumentParser(description="Study SpliceAI perturbations on input exons.")
     parser.add_argument(
-        dest='input', help='Input data that we want to explain.')
+        dest='input', help='Input exons that we want to perform model sensitivity analysis.')
     parser.add_argument(
         dest='cache', help='Path to the directory where cache files are located.')
     parser.add_argument(
@@ -511,7 +509,7 @@ def main():
                   'spliceai_raw_results': args.spliceai_raw_results,
                   'verbosity': args.verbosity}
 
-        preprocess = Preprocessing(df,
+        preprocess = MutSplicePipeline(df,
                                    do_gtf_queries=not args.skip_gtf_queries,
                                    do_motif_scanning=not args.skip_motif_scanning,
                                    do_mutations=not args.skip_mutagenesis,

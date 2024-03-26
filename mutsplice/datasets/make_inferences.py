@@ -2,9 +2,9 @@ import argparse
 from cmath import log
 from loguru import logger
 from gtfhandle.utils import dict_to_fasta
-from explainer.datasets.utils import setup_logger
-from explainer.datasets.manage_spliceai import SpliceAI
-from explainer.mutations.mutate_seqs import MotifsHits
+from mutsplice.datasets.utils import setup_logger
+from mutsplice.datasets.manage_spliceai import SpliceAI
+from mutsplice.perturbations.mutate_seqs import MotifsHits
 
 def main():
     parser = argparse.ArgumentParser(description="Run spliceAI directly from a set of fasta sequences")

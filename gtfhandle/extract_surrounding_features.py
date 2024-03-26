@@ -9,7 +9,7 @@ import pyranges
 from typing import Union
 from gtfhandle.features import Exons, Transcripts, compute_gc_and_hexamers, compute_length, insert_exons, extract_surrounding_features
 from gtfhandle.utils import file_to_bed_df, open_fasta, write_bed_file, read_features_file, remove_overlaps
-from explainer.datasets.utils import generate_spliceAI_input_from_neighbour_df
+from mutsplice.datasets.utils import generate_spliceAI_input_from_neighbour_df
 
 
 def getFeaturesFromCache(data: Union[pyranges.PyRanges, pd.DataFrame], **kwargs):

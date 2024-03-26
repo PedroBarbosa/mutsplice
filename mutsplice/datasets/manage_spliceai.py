@@ -13,7 +13,7 @@ from matplotlib.patches import Patch
 from dna_features_viewer import GraphicFeature, GraphicRecord
 from spliceai.utils import *
 from gtfhandle.utils import *
-from explainer.datasets.utils import _process_ss_idx, _adjust_ss_idx_on_mutated_seqs
+from mutsplice.datasets.utils import _process_ss_idx, _adjust_ss_idx_on_mutated_seqs
 
 
 class SpliceAI(object):

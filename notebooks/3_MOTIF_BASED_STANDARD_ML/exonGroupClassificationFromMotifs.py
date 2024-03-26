@@ -15,7 +15,7 @@ from tqdm import tqdm
 tqdm.pandas()
 pd.set_option('display.width', 1000)
 import matplotlib.pyplot as plt
-from explainer.datasets.tabular_dataset import TabularDataset
+from mutsplice.datasets.tabular_dataset import TabularDataset
 from gtfhandle.utils import file_to_bed_df
 
 # %%

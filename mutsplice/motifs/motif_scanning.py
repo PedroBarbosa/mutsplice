@@ -1,5 +1,5 @@
-from explainer.datasets.utils import _process_ss_idx, _get_loc_of_motif, setup_logger
-from explainer.motifs.rbp_lists import RBP_SUBSETS
+from mutsplice.datasets.utils import _process_ss_idx, _get_loc_of_motif, setup_logger
+from mutsplice.motifs.rbp_lists import RBP_SUBSETS
 from gtfhandle.utils import fasta_to_dict
 from typing import Union, Literal
 import os

@@ -13,9 +13,9 @@ import functools
 import shutil
 from multiprocessing import cpu_count, Pool
 from tqdm import tqdm
-from explainer.motifs.rbp_lists import RBP_SUBSETS
-from explainer.motifs.motif_scanning import Motifs, _call_parallel_motif_scanning, _concat_parallel_output
-from explainer.datasets.utils import _get_len, _location_specific_normalization, setup_logger
+from mutsplice.motifs.rbp_lists import RBP_SUBSETS
+from mutsplice.motifs.motif_scanning import Motifs, _call_parallel_motif_scanning, _concat_parallel_output
+from mutsplice.datasets.utils import _get_len, _location_specific_normalization, setup_logger
 from gtfhandle.utils import split_fasta_file
 
 

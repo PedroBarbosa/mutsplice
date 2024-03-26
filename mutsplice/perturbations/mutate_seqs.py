@@ -7,7 +7,7 @@ import random
 import pandas as pd
 from loguru import logger
 from gtfhandle.utils import fasta_to_dict
-from explainer.datasets.manage_spliceai import _process_ss_idx
+from mutsplice.datasets.manage_spliceai import _process_ss_idx
 
 
 class MotifsHits(object):

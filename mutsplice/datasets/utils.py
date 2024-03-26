@@ -397,7 +397,7 @@ def _get_loc_of_motif(info: pd.DataFrame, ref_ss_idx: dict):
                         partial = pr.PyRanges(_p[_p._merge == "left_only"].drop('_merge', axis=1))
 
                 # MOTIFS NEAR/SPANNING ACCEPTORS
-                acceptor_region = partial[(partial.End < partial.End_b) |
+                acceptor_region = partial[(partial.Start < partial.Start_b) |
                                         (partial.Start - partial.Start_b < 2)]
 
                 if acceptor_region.__len__() > 0:

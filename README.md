@@ -1,42 +1,59 @@
-## InterpretSplicing
-Set of modules to aid on the interpretation of SpliceAI, a neural network that models RNA splicing.
+## MutSplice
 
-Starting from a list of exons in a file, one can easily construct a large dataset with thousands of features that may explain spliceAI predictions for those same exons.
+<img src="mutsplice/readme_images/mutsplice_scheme.png" height="200"/>
 
-A file with a list of exons is necessary:
+A pipeline to study SpliceAI predictions via sequence perturbations at motif locations.
+
+This is not a production-ready software, but rather a project developed in the context of a specific chapter of my PhD thesis.
+
+### Installation
+
+To install the package, clone the repository and run:
 
 ```
-chr10:100250248-100250332
-chr10:100256262-100256476
-chr10:100243698-100243772
+git clone https://github.com/PedroBarbosa/MutSplice.git
+cd MutSplice
+conda env create -f conda_environment.yml
+conda activate mutsplice
+pip install -e .
 ```
+
+### Input format and usage
+
+The input requires exon coordinates (1-based), a GTF cache downloadable from [here](https://app.box.com/s/zxok51g9zhsrc0l5hqpbvskxfh27t5se), and the [reference genome in fasta](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_45/GRCh38.primary_assembly.genome.fa.gz). Having additional info on the gene name and transcript id is optional, but recommended to extract the intended transcript structure for the exon of interest. An example of suitable input tab separated file is:
+
+
+| target_coordinates       | Strand | gene_name | transcript_id   |
+|--------------------------|--------|-----------|-----------------|
+| chr2:130161186-130161272 | -      | SMPD4     | ENST00000680298 |
+| chr11:47259180-47259259  | +      | NR1H3     | ENST00000441012 |
+|      ...                 | ...    | ...       | ...             |
+
 
 Then, simply call:
 
 ```
 from gtfhandle.utils import file_to_bed_df
-from explainer.datasets.generate_dataset import Preprocessing
-from explainer.datasets.global_explain import GlobalDataset
+from mutsplice.datasets.mutsplice_pipeline import MutSplicePipeline
+from mutsplice.datasets.global_explain import GlobalDataset
 
 df = file_to_bed_df(bed_file)
-preprocess = Preprocessing(df,
+preprocess = MutSplicePipeline(df,
                         do_gtf_queries=True,
                         do_motif_scanning=True,
                         do_mutations=True,
                         run_spliceai=True
                         **kwargs)
-
-d = GlobalDataset(preprocess.results, out_dir, **kwargs)
 ```
 
-There are many custom settings one can add. Particularly `gtf_cache`, `out_dir`, `fasta` are mandatory:
+There are many custom settings one can add. However, `gtf_cache`, `out_dir`, `fasta` are mandatory:
 
 ```
-kwargs = {'input_feature_type': args.input_feature_type,
-          'out_dir': args.out_dir,
-          'outbasename': Path(args.input).stem if args.outbasename is None else args.outbasename,
-          'gtf_cache': args.cache,
+kwargs = {'gtf_cache': args.cache,
           'fasta': args.fasta,
+          'out_dir': args.out_dir,
+          'outbasename': args.outbasename,
+          'input_feature_type': args.input_feature_type,
           'transcript_ids': args.transcript_ids,
           'motif_source': args.motif_source,
           'motif_search': args.motif_search,
@@ -52,8 +69,18 @@ kwargs = {'input_feature_type': args.input_feature_type,
           'spliceai_raw_results': args.spliceai_raw_results}
 ```
 
-To run spliceAI on flat sequences (regardless of gene structure information, and exon definition), just call directly the spliceAI script (which accepts fasta and bed is input):
+Check the `--help` of `python mutsplice/datasets/mutsplice_pipeline.py` for more information on the available options.
+
+### Output
+
+The output are dataframes with lots of information, including the perturbation effect, location of the motif, distances to splice sites, effects on cryptic splice sites, etc.Plots like the one below are also generated, which provides a summary representation of relevant perturbation across the exon of interest:
+
+<img src="mutsplice/readme_images/mutsplice_out.png" height="300"/>
+
+### Running SpliceAI irrespective of exon triplet structure
+
+To run spliceAI on flat sequences, just call directly the SpliceAI script (which accepts fasta and bed as input):
 
 ```
-python make_inferences.py --fasta ref_genome.fa --is_flat_input --outbasename test intervals.bed out_dir
+python mutsplice/datasets/make_inferences.py --fasta ref_genome.fa --is_flat_input --outbasename test intervals.bed out_dir
 ```
