@@ -35,18 +35,17 @@ Then, simply call:
 ```
 from gtfhandle.utils import file_to_bed_df
 from mutsplice.datasets.mutsplice_pipeline import MutSplicePipeline
-from mutsplice.datasets.global_explain import GlobalDataset
 
 df = file_to_bed_df(bed_file)
-preprocess = MutSplicePipeline(df,
-                        do_gtf_queries=True,
-                        do_motif_scanning=True,
-                        do_mutations=True,
-                        run_spliceai=True
-                        **kwargs)
+MutSplicePipeline(df,
+                  do_gtf_queries=True,
+                  do_motif_scanning=True,
+                  do_mutations=True,
+                  run_spliceai=True
+                  **kwargs)
 ```
 
-There are many custom settings one can add. However, `gtf_cache`, `out_dir`, `fasta` are mandatory:
+There are many custom settings one can add (see below). However, `gtf_cache`, `out_dir`, `fasta` are mandatory. Output files at each step will be written at `out_dir` directory. 
 
 ```
 kwargs = {'gtf_cache': args.cache,
