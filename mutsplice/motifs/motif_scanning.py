@@ -56,7 +56,7 @@ def _call_parallel_motif_scanning(seqs: str,
            source=kwargs['motif_source'],
            search=kwargs['motif_search'],      
            pvalue_threshold=kwargs['pvalue_threshold'],
-           logodds_threshold=kwargs['log_odds_threshold'],
+           min_nuc_probability=kwargs['min_nuc_probability'],
            min_motif_length=kwargs['min_motif_length'],
            ss_idx=ss_idx_path,
            ss_idx_extend=kwargs['ss_idx_extend'],
@@ -109,7 +109,7 @@ class Motifs(object):
                  search: str = Literal['plain', 'fimo'],
                  subset_rbps: Union[str, list] = "encode",
                  pvalue_threshold: float = 0.00005,
-                 logodds_threshold: float = 0.15,
+                 min_nuc_probability: float = 0.15,
                  min_motif_length: int = 5,
                  ss_idx: Union[str, dict] = None,
                  ss_idx_extend: int = 5000,
@@ -130,7 +130,7 @@ class Motifs(object):
         to consider a hit as valid when motif scanning is
         performed with FIMO.
 
-        :param float logodds_threshold: Minimum log-odds
+        :param float min_nuc_probability: Minimum nuc prob
         value for a nucleotide in a given position for it
         to be considered as relevant
 
@@ -171,7 +171,7 @@ class Motifs(object):
         self.source = source
         self.search = search
         self.pvalue_threshold = pvalue_threshold
-        self.logodds_threshold = logodds_threshold
+        self.min_nuc_probability = min_nuc_probability
         self.min_motif_len = min_motif_length
         self.ref_ss_idx_extend = ss_idx_extend
 
@@ -372,9 +372,9 @@ class Motifs(object):
             _n = full_df.shape[0]
             full_df = full_df[full_df.rbp_name_motif.isin(
                 all_possible_features)]
-            logger.debug("Number of hits removed due to the logodds "
+            logger.debug("Number of hits removed due to the min nuc prob "
                          "threshold set ({}): {}".format(
-                             self.logodds_threshold, _n - full_df.shape[0]))
+                             self.min_nuc_probability, _n - full_df.shape[0]))
 
             # Remove matches not passing the p-value threshold
             _n = full_df.shape[0]
@@ -528,7 +528,7 @@ class Motifs(object):
 
         if isinstance(pwm, np.ndarray):
 
-            r, c = np.where(pwm >= self.logodds_threshold)
+            r, c = np.where(pwm >= self.min_nuc_probability)
 
             per_position = np.split(c,
                                     np.searchsorted(r, range(1, pwm.shape[0])))
@@ -596,7 +596,7 @@ class Motifs(object):
 
         logger.info("Generating unambiguous sequences using {} "
                      "as the minimum log-odds score".format(
-                         self.logodds_threshold))
+                         self.min_nuc_probability))
         # Convert PWMs to unambiguous sequences
         too_short = []
         for rbp_name, _motifs in motifs.items():

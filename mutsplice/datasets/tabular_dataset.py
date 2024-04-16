@@ -220,7 +220,7 @@ class TabularDataset(object):
                 source=kwargs['motif_source'],
                 search=kwargs['motif_search'],
                 pvalue_threshold=kwargs['pvalue_threshold'],
-                logodds_threshold=kwargs['log_odds_threshold'],
+                min_nuc_probability=kwargs['min_nuc_probability'],
                 ss_idx=self.ss_idx,
                 ss_idx_extend=kwargs['ss_idx_extend'])
 

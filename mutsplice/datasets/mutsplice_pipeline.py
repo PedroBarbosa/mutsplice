@@ -39,7 +39,7 @@ def _generate_default_parameters(**kwargs):
     kwargs['motif_source'] = kwargs.get('motif_source', 'rosina2017')
     kwargs['motif_search'] = kwargs.get('motif_search', 'plain')
     kwargs['pvalue_threshold'] = kwargs.get('pvalue_threshold', 0.00005)
-    kwargs['log_odds_threshold'] = kwargs.get('log_odds_threshold', 0.15)
+    kwargs['min_nuc_probability'] = kwargs.get('min_nuc_probability', 0.15)
     kwargs['min_motif_length'] = kwargs.get('min_motif_length', 5)
 
     kwargs['ss_idx_extend'] = kwargs.get('ss_idx_extend', 5000)
@@ -198,7 +198,7 @@ class MutSplicePipeline(object):
                    source=kwargs['motif_source'],
                    search=kwargs['motif_search'],
                    pvalue_threshold=kwargs['pvalue_threshold'],
-                   logodds_threshold=kwargs['log_odds_threshold'],
+                   min_nuc_probability=kwargs['min_nuc_probability'],
                    min_motif_length=kwargs['min_motif_length'],
                    ss_idx=self.SS_IDX_PATH,
                    ss_idx_extend=kwargs['ss_idx_extend'],
@@ -426,9 +426,9 @@ def main():
                              'a motif ocurrence as valid. Only relevant when "motif_search" '
                              '== "fimo". Default: "0.00005".')
 
-    parser.add_argument('-l', '--log_odds_threshold', default=0.15, type=float,
-                        help='Minimum log-odds value for a nucleotide in a given '
-                             'position of the PWM for it to be considered as relevant. Default: 0.15')
+    parser.add_argument('--min_nuc_probability', default=0.15, type=float,
+                        help='Minimum probability for a nucleotide in a given position of the PWM '
+                        'for it to be considered as relevant. Default: 0.15')
 
     parser.add_argument('--min_motif_length', default=5, type=int,
                         help='Minimum length of a sequence motif to search in the sequences. Default. 5')
@@ -497,7 +497,7 @@ def main():
                   'motif_search': args.motif_search,
                   'subset_rbps': process_subset_args(args.subset_rbps),
                   'pvalue_threshold': args.pvalue_threshold,
-                  'log_odds_threshold': args.log_odds_threshold,
+                  'min_nuc_probability': args.min_nuc_probability,
                   'min_motif_length': args.min_motif_length,
                   'use_full_sequence': args.use_full_sequence,
                   'ss_idx_extend': args.ss_idx_extend,
