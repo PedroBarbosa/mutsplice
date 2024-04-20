@@ -70,8 +70,11 @@ class TabularDataset(object):
                 if os.path.isfile(data):
                     data = pd.read_csv(data, sep="\t")
                 elif os.path.isdir(data):
-                    files = glob.glob('{}/*gz'.format(data))
-                    data = pd.concat(map(functools.partial(pd.read_csv, sep='\t'), files))
+                    try:
+                        files = glob.glob('{}/*gz'.format(data))
+                        data = pd.concat(map(functools.partial(pd.read_csv, sep='\t'), files))
+                    except ValueError:
+                        pass
                     
             if len(list(data.filter(like='_effect'))) > 1:
                 self.is_from_mutagenesis = True
@@ -82,6 +85,7 @@ class TabularDataset(object):
             self.data = data
 
         input_seqs, motifs_path = self.process_input_sequences(**kwargs)
+
         self.data = self.data.set_index('seq_id')
         self.data = _get_len(self.data, input_seqs)
         
@@ -104,8 +108,8 @@ class TabularDataset(object):
         cass_cols = ['ref_acceptor_cassette', 'ref_donor_cassette']
         self.data['average_cassette_strength'] = self.data[cass_cols].mean(
             axis=1, numeric_only=True)
-        self.data.to_csv('{}/TABULAR_DATASET.tsv.gz'.format(self.outdir),
-                         sep="\t", index=False, compression='gzip')
+        # self.data.to_csv('{}/TABULAR_DATASET.tsv.gz'.format(self.outdir),
+        #                  sep="\t", index=False, compression='gzip')
 
     def process_input_sequences(self, **kwargs) -> str:
         """
