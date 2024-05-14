@@ -39,9 +39,8 @@ notebooks/.virtual_documents
 notebooks/*[png|pdf]
 
 # mutsplice outputs
-notebooks/2_mutsplice/
-notebooks/2_mutsplice_out.ipynb
+#notebooks/2_mutsplice/
 notebooks/2_cmds.txt
-notebooks/1_SpliceAI
-notebooks/1_AllExonPairs
+notebooks/4_all_motifScan
+notebooks/4_all_gappedKmers
 *bed
