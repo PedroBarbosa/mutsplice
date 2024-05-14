@@ -1,10 +1,12 @@
 ## MutSplice
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11193459.svg)](https://doi.org/10.5281/zenodo.11193459)
+
 <img src="mutsplice/readme_images/mutsplice_scheme.png" height="200"/>
 
 A pipeline to study SpliceAI predictions via sequence perturbations at motif locations.
 
-This is not a production-ready software, but rather a project developed in the context of a specific chapter of my PhD thesis.
+This is not a production-ready software, but rather a project developed in the context of a specific chapter of my PhD thesis. In particular, I generated datasets to study alternative splicing regulation by individual RNA-binding proteins and used those datasets to run the MutSplice pipeline. The datasets [are available](https://doi.org/10.5281/zenodo.11193459) at Zenodo, please consider citing them if they are useful in any way.
 
 ### Installation
 
